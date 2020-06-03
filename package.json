@@ -1,0 +1,19 @@
+{
+  "name": "MapDemos",
+  "version": "1.0.0",
+  "description": "Some examples from Arcgis and Google maps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.2.3",
+    "log4js": "^5.2.2",
+    "node-rest-client": "^3.1.0",
+    "parse-json": "^5.0.0",
+    "replace-string": "^3.1.0",
+    "urlencode": "^1.1.0"
+  }
+}

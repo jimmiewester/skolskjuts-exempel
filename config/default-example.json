@@ -1,0 +1,16 @@
+{
+  "Google": {
+    "key": "Key from Google Maps"
+  },
+  "ArcGis": {
+    "url": "https://arcgis..../"
+  },
+  "Global": {
+    "Locations": {
+      "FromStreet": "Norrevångsgatan 1",
+      "FromCity": "Vellinge",
+      "FromPostCode": "",
+      "To": "Ystad+Sweden"
+    }
+}
+}
