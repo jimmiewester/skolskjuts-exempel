@@ -4,7 +4,11 @@ const google_key = config.get('Google.key');
 const arcgis_username = config.get('ArcGis.username');
 const arcgis_password = config.get('ArcGis.password');
 const arcgis_url = config.get('ArcGis.url');
-const to_location_string = config.get('Global.Locations.To');
+const to_location_string = config.get('Global.Locations.ToStreet') + " " + config.get('Global.Locations.ToPostCode') + " " +  config.get('Global.Locations.ToCity');
+const to_location_street = config.get('Global.Locations.ToStreet');
+const to_location_postcode = config.get('Global.Locations.ToPostCode');
+const to_location_city =  config.get('Global.Locations.ToCity');
+
 const from_location_street = config.get('Global.Locations.FromStreet');
 const from_location_city = config.get('Global.Locations.FromCity');
 const from_location_postcode = config.get('Global.Locations.FromPostCode');
@@ -32,17 +36,17 @@ generateArcGisToken(arcgis_username, arcgis_password, function (status, token)
       GetVellingeData(from_location_street, from_location_city, from_location_postcode, token, function (status, output)
       {
           const logger = log4js.getLogger('arcgis');
+          var urlencode = require('urlencode');
           if (status) {
               logger.error("GetVellingeData Error:\n" + output);
           }
           else {
-              logger.info("GetVellingeData skolområde: " + output["attributes"]["SKOLOMR"]);
-              logger.info("GetVellingeData Longitude: " + output["geometry"].x);
-              logger.info("GetVellingeData Latitude: " + output["geometry"].y);
+              logger.info("GetVellingeData Hemadress skolområde: " + output["attributes"]["SKOLOMR"]);
+              logger.info("GetVellingeData HemadressLongitude: " + output["geometry"].x);
+              logger.info("GetVellingeData HemadressLatitude: " + output["geometry"].y);
 
               var coordinates = output["geometry"].y + " " + output["geometry"].x;
-
-
+              var to_location_string = urlencode(to_location_street + ", " + to_location_postcode + " " +  to_location_city);
 
               GetGoogleDistance(google_key, coordinates, to_location_string, function (status, output)
               {
@@ -58,6 +62,20 @@ generateArcGisToken(arcgis_username, arcgis_password, function (status, token)
 
             }
         });
+        GetVellingeData(to_location_street, to_location_city, to_location_postcode, token, function (status, output)
+        {
+            const logger = log4js.getLogger('arcgis');
+            if (status) {
+                logger.error("GetVellingeData Error:\n" + output);
+            }
+            else {
+                logger.info("GetVellingeData Skoladress skolområde: " + output["attributes"]["SKOLOMR"]);
+                logger.info("GetVellingeData Skoladress Longitude: " + output["geometry"].x);
+                logger.info("GetVellingeData Skoladress Latitude: " + output["geometry"].y);
+
+                var coordinates = output["geometry"].y + " " + output["geometry"].x;
+              }
+          });
       }
     }
   );
@@ -71,6 +89,8 @@ async function GetGoogleDistance(key, fromLocation, toLocation, callback) {
         "Accept": "application/json"
   		}
   };
+  console.log("https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + fromLocation + "&destinations=" + toLocation + "&mode=walking&key=" + key);
+
     google.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + fromLocation + "&destinations=" + toLocation + "&mode=walking&key=" + key, args, function (result, response) {
   	if(result.status === "OK"){
   		callback(false, result.rows[0].elements[0].distance.value)
