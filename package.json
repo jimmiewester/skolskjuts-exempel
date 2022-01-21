@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "config": "^3.2.3",
-    "log4js": "^5.2.2",
+    "log4js": "^6.4.0",
     "node-rest-client": "^3.1.0",
     "parse-json": "^5.0.0",
     "replace-string": "^3.1.0",
